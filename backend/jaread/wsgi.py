@@ -1,5 +1,5 @@
 """
-WSGI config for newsapi project.
+WSGI config for jaread project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'newsapi.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jaread.settings')
 
 application = get_wsgi_application()
