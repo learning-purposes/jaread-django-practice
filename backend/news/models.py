@@ -1,5 +1,5 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.core.validators import MinValueValidator, MaxLengthValidator
 
 
 class Journalist(models.Model):
@@ -40,7 +40,7 @@ class Book(models.Model):
         return f"{self.title}"
 
 
-class BookReview(models.Model):
+class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     review_author = models.CharField(max_length=8,
@@ -50,10 +50,11 @@ class BookReview(models.Model):
                               null=True)
 
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1),
-                                                     MaxLengthValidator(5)])
+                                                     MaxValueValidator(5)])
+
     book = models.ForeignKey(Book,
                              related_name='reviews',
                              on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.rating}"
+        return str(self.rating)

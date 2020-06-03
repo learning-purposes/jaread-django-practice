@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from datetime import datetime
 from django.utils.timesince import timesince
-from news.models import Article, Journalist, Book, BookReview
+from news.models import Article, Journalist, Book, Review
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -57,15 +57,16 @@ class JournalistSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BookReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BookReview
-        fields = '__all__'
+        model = Review
+        exclude = ('book',)
+        # fields = '__all__'
 
 
 class BookSerializer(serializers.ModelSerializer):
-    reviews = BookReviewSerializer(many=True,
-                                   read_only=True)
+    reviews = ReviewSerializer(many=True,
+                               read_only=True)
 
     class Meta:
         model = Book

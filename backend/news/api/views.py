@@ -3,15 +3,16 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework import generics
 from rest_framework import mixins
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
-from news.models import Article, Journalist, BookReview, Book
+from news.models import Article, Journalist, Review, Book
 from .serializers import (
     ArticleSerializer,
     JournalistSerializer,
     BookSerializer,
-    BookReviewSerializer
+    ReviewSerializer
 )
 
 
@@ -115,17 +116,52 @@ class JournalistCreateAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# mixins are used to provide further funtionalities
+
+# mixins are used to provide further functionalities
 # they provide action methods: list(), create()
 # rather than defining get(), post() as in APIView
-class BookListCreateAPIView(mixins.ListModelMixin,
-                            mixins.CreateModelMixin,
-                            generics.GenericAPIView):
+# class BookListCreateAPIView(mixins.ListModelMixin,
+#                             mixins.CreateModelMixin,
+#                             generics.GenericAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
+#
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
+
+# refactor using concrete classes
+# because of thier abstraction level they are teh fastest
+# to write and the most magical
+# i.d RetrieveUPdateAPIView extends GenericAPIView
+# and RetrieveModelMixin + UpdateModelMixin
+class BookListCreateAPIView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+class BookDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+
+class ReviewListCreateAPIView(generics.CreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    # we need to link to a book because of one-to-many rs
+    # here we are linking the passed book with the newely
+    # created instance of bookreview
+    # p.s: pay attention to url creation
+    def perform_create(self, serializer):
+        # the kwargs that's coming from the url path
+        book_pk = self.kwargs.get("pk")
+        book = get_object_or_404(Book, pk=book_pk)
+        serializer.save(book=book)
+
+
+class ReviewDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
