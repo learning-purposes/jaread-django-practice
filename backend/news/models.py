@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxLengthValidator
 
 
 class Journalist(models.Model):
@@ -25,3 +26,34 @@ class Article(models.Model):
 
     def __str__(self):
         return f"{self.author} wrote {self.title}"
+
+
+class Book(models.Model):
+    author = models.CharField(max_length=140)
+    title = models.CharField(max_length=120)
+    description = models.CharField(max_length=200)
+    publication_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title}"
+
+
+class BookReview(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    review_author = models.CharField(max_length=8,
+                                     blank=True,
+                                     null=True)
+    review = models.TextField(blank=True,
+                              null=True)
+
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1),
+                                                     MaxLengthValidator(5)])
+    book = models.ForeignKey(Book,
+                             related_name='reviews',
+                             on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.rating}"

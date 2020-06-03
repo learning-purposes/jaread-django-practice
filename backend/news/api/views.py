@@ -1,11 +1,18 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework import generics
+from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
-from news.models import Article, Journalist
-from .serializers import ArticleSerializer, JournalistSerializer
+from news.models import Article, Journalist, BookReview, Book
+from .serializers import (
+    ArticleSerializer,
+    JournalistSerializer,
+    BookSerializer,
+    BookReviewSerializer
+)
 
 
 # create or list functionality? according to the request
@@ -25,20 +32,6 @@ from .serializers import ArticleSerializer, JournalistSerializer
 #             return Response(serializer.data, status=status.HTTP_201_CREATED)
 #         # if serializer is not valid
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ArticleListCreateAPIView(APIView):
-    def get(self, request):
-        articles = Article.objects.filter(active=True)
-        serializer = ArticleSerializer(articles, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = ArticleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # @api_view(['GET', 'PUT', 'DELETE'])
@@ -66,6 +59,19 @@ class ArticleListCreateAPIView(APIView):
 #     elif request.method == 'DELETE':
 #         article.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ArticleListCreateAPIView(APIView):
+    def get(self, request):
+        articles = Article.objects.filter(active=True)
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ArticleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ArticleDetailAPIView(APIView):
@@ -108,3 +114,18 @@ class JournalistCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# mixins are used to provide further funtionalities
+# they provide action methods: list(), create()
+# rather than defining get(), post() as in APIView
+class BookListCreateAPIView(mixins.ListModelMixin,
+                            mixins.CreateModelMixin,
+                            generics.GenericAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)

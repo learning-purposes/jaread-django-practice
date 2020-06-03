@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from datetime import datetime
 from django.utils.timesince import timesince
-from news.models import Article, Journalist
+from news.models import Article, Journalist, Book, BookReview
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -11,6 +11,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     """like so we face problem when creating article instance,
     it needs an author, JournalistSerializer(read_only=true)
     also doesn't help. we need to make the rs explicit"""
+
     # author = JournalistSerializer()
 
     class Meta:
@@ -53,6 +54,21 @@ class JournalistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Journalist
+        fields = '__all__'
+
+
+class BookReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookReview
+        fields = '__all__'
+
+
+class BookSerializer(serializers.ModelSerializer):
+    reviews = BookReviewSerializer(many=True,
+                                   read_only=True)
+
+    class Meta:
+        model = Book
         fields = '__all__'
 
 # class ArticleSerializer(serializers.Serializer):
