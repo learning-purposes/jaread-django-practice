@@ -2,17 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="abaedc3f-0cb3-42cc-9731-0d64b1f073d8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/news/api/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jaread.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jaread.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.env.dist" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env.dist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/news/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/news/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/newsapi/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/newsapi/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/jaread/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/jaread/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/manage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/news/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/news/api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/news/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/news/api/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/news/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/news/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/newsapi/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/jaread/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/newsapi/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/jaread/asgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/newsapi/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/jaread/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/newsapi/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/newsapi/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/jaread/wsgi.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +68,7 @@
       <updated>1591031646637</updated>
       <workItem from="1591031647965" duration="344000" />
       <workItem from="1591032004410" duration="694000" />
-      <workItem from="1591103200248" duration="5542000" />
+      <workItem from="1591103200248" duration="6658000" />
     </task>
     <servers />
   </component>
@@ -85,10 +86,11 @@
     </state>
     <state x="1507" y="335" key="SettingsEditor/2560.91.1536.832/0.0.2560.1400@0.0.2560.1400" timestamp="1591032302902" />
     <state x="1507" y="362" key="SettingsEditor/500.1463.1440.822/0.23.2560.1417@0.23.2560.1417" timestamp="1591104764721" />
-    <state x="1669" y="335" width="672" height="660" key="search.everywhere.popup" timestamp="1591111979883">
-      <screen x="0" y="23" width="2560" height="1362" />
+    <state x="1669" y="348" width="672" height="687" key="search.everywhere.popup" timestamp="1591165305743">
+      <screen x="0" y="23" width="2560" height="1417" />
     </state>
     <state x="1669" y="321" width="672" height="678" key="search.everywhere.popup/2560.91.1536.832/0.0.2560.1400@0.0.2560.1400" timestamp="1591032652381" />
+    <state x="1669" y="348" width="672" height="687" key="search.everywhere.popup/500.1463.1440.822/0.23.2560.1417@0.23.2560.1417" timestamp="1591165305743" />
     <state x="1669" y="335" width="672" height="660" key="search.everywhere.popup/500.1463.1440.877/0.23.2560.1362@0.23.2560.1362" timestamp="1591111979883" />
   </component>
 </project>
