@@ -2,12 +2,14 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework import mixins
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from news.models import Article, Journalist, Review, Book
+from .permissions import IsAdminUserOrReadOnly
 from .serializers import (
     ArticleSerializer,
     JournalistSerializer,
@@ -140,12 +142,15 @@ class JournalistCreateAPIView(APIView):
 class BookListCreateAPIView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
 class BookDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 class ReviewListCreateAPIView(generics.CreateAPIView):
     queryset = Review.objects.all()

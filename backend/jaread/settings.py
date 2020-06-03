@@ -115,3 +115,11 @@ USE_TZ = True
 STATIC_ROOT = env('STATIC_ROOT', default='/static/')
 STATIC_URL = env('STATIC_URL', default='/static/')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+# default permission for all views for auth users only
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+#     ]
+# }
+#
