@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Journalist(models.Model):
@@ -43,9 +44,8 @@ class Book(models.Model):
 class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    review_author = models.CharField(max_length=8,
-                                     blank=True,
-                                     null=True)
+    review_author = models.ForeignKey(User,
+                                      on_delete=models.CASCADE)
     review = models.TextField(blank=True,
                               null=True)
 

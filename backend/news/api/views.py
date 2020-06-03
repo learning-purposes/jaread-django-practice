@@ -4,12 +4,13 @@ from rest_framework.decorators import api_view
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import mixins
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from news.models import Article, Journalist, Review, Book
-from .permissions import IsAdminUserOrReadOnly
+from .permissions import IsAdminUserOrReadOnly, IsReviewAuthorOrReadOnly
 from .serializers import (
     ArticleSerializer,
     JournalistSerializer,
@@ -149,12 +150,15 @@ class BookListCreateAPIView(generics.ListCreateAPIView):
 class BookDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAdminUserOrReadOnly]
+
+
 
 class ReviewListCreateAPIView(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     # we need to link to a book because of one-to-many rs
     # here we are linking the passed book with the newely
@@ -164,9 +168,18 @@ class ReviewListCreateAPIView(generics.CreateAPIView):
         # the kwargs that's coming from the url path
         book_pk = self.kwargs.get("pk")
         book = get_object_or_404(Book, pk=book_pk)
-        serializer.save(book=book)
+        review_author = self.request.user
+
+        # check if author already made a review
+        review_qs = Review.objects.filter(book=book,
+                                           review_author=review_author)
+        if review_qs.exists():
+            raise ValidationError('You have already made a review!')
+        serializer.save(book=book, review_author=review_author)
 
 
 class ReviewDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    # allow only review owners to edit this
+    permission_classes = [IsReviewAuthorOrReadOnly]
