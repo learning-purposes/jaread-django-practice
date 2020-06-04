@@ -34,7 +34,9 @@ INSTALLED_APPS = [
     'rest_framework',
     # my apps
     'news.apps.NewsConfig',
+    'profiles.apps.ProfilesConfig',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -115,6 +117,9 @@ USE_TZ = True
 STATIC_ROOT = env('STATIC_ROOT', default='/static/')
 STATIC_URL = env('STATIC_URL', default='/static/')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+MEDIA_URL = env('MEDIA_URL', default='/media/')
+MEDIA_ROOT = env('MEDIA_ROOT', default='/static/media')
 
 # default permission for all views for auth users only
 # REST_FRAMEWORK = {

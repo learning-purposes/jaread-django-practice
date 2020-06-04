@@ -1,15 +1,14 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
+from profiles.models import Profile
 
 
-class Journalist(models.Model):
-    first_name = models.CharField(max_length=60)
-    last_name = models.CharField(max_length=60)
-    biography = models.TextField(blank=True)
+class Journalist(Profile):
+    agency = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return self.user.username
 
 
 class Article(models.Model):
