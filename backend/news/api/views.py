@@ -8,8 +8,10 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from rest_framework.generics import get_object_or_404
 from news.models import Article, Journalist, Review, Book
+from .pagination import SmallSetPagination
 from .permissions import IsAdminUserOrReadOnly, IsReviewAuthorOrReadOnly
 from .serializers import (
     ArticleSerializer,
@@ -141,10 +143,12 @@ class JournalistCreateAPIView(APIView):
 # i.d RetrieveUPdateAPIView extends GenericAPIView
 # and RetrieveModelMixin + UpdateModelMixin
 class BookListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().order_by('-id')
     serializer_class = BookSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [IsAdminUserOrReadOnly]
+    # setting pagination per view, we must order here
+    pagination_class = SmallSetPagination
 
 
 class BookDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
