@@ -152,6 +152,9 @@ MEDIA_ROOT = env('MEDIA_ROOT', default='/static/media')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # jwt are not saved in the database
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
+REST_USE_JWT = True
