@@ -52,6 +52,8 @@ class JournalistSerializer(serializers.ModelSerializer):
                                                    read_only=True,
                                                    view_name='article_detail')
 
+    user = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Journalist
         fields = '__all__'
