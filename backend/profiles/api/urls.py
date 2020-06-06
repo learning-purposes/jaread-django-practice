@@ -12,7 +12,8 @@ from .views import (ProfileViewSet,
 # router will automatically generate links of endpoints for this viewset
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
-router.register(r'status', ProfileStatusViewSet)
+# we need basename because we overwritten the get_query method
+router.register(r'status', ProfileStatusViewSet, basename='status')
 
 urlpatterns = [
     # path('profiles/', profile_list,

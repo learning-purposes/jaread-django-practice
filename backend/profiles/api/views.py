@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 # from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.filters import SearchFilter
 from rest_framework import viewsets
 from rest_framework import mixins
 from rest_framework.viewsets import ModelViewSet
@@ -35,12 +36,14 @@ class ProfileViewSet(mixins.UpdateModelMixin,
     serializer_class = ProfileSerializer
     # profile instance should be only updated by their owners (object.user)
     permission_classes = [IsAuthenticated, IsOwnProfileOrReadOnly]
+    # another way to filter
+    filter_backends = [SearchFilter]
+    search_fields = ['city', 'bio']
 
 
 # with ModeViewSet we don't need to inherit genericviewset
 # and its mixin, because it self inherit from it
 class ProfileStatusViewSet(ModelViewSet):
-    queryset = ProfileStatus.objects.all()
     serializer_class = ProfileStatusSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
@@ -49,6 +52,20 @@ class ProfileStatusViewSet(ModelViewSet):
     def perform_create(self, serializer):
         user_profile = self.request.user.profile
         serializer.save(user_profile=user_profile)
+
+    # rewriting this method enables us to see if a param key
+    # is passed with request (username in this case),
+    # if so, then filter the query set accordingly
+    # if no param key passed, then the unfiltered qureyset is returned
+    # to get statuses of jane only we pass username=john in the url
+    # http://127.0.0.1:8000/api/status/?username=jane
+    def get_queryset(self):
+        queryset = ProfileStatus.objects.all()
+        username = self.request.query_params.get('username', None)
+        if username is not None:
+            queryset = queryset.filter(user_profile__user__username=username)
+        return queryset
+
 
 # this view let the user to update only the avatar in the profile
 class AvatarUpdateViewAPI(generics.UpdateAPIView):
@@ -59,9 +76,9 @@ class AvatarUpdateViewAPI(generics.UpdateAPIView):
     # pass and id in the url
     # because this get_object to automatically
     # identify and return the profile instance
-    # assosiated with request.user
+    # associated with request.user
     def get_object(self):
-        profile_object= self.request.user.profile
+        profile_object = self.request.user.profile
         return profile_object
 
 # 38.Viewsets and Routers
