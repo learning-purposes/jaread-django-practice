@@ -24,5 +24,5 @@ class ProfileStatusSerializer(serializers.ModelSerializer):
     user_profile = serializers.StringRelatedField(read_only=True)
 
     class Meta:
-        model = Profile
+        model = ProfileStatus
         fields = '__all__'
