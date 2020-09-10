@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.twitter',
 
     # my apps
-    'news.apps.NewsConfig',
+    'books.apps.BooksConfig',
     'profiles.apps.ProfilesConfig',
 ]
 
@@ -128,12 +128,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = env('STATIC_ROOT', default='/static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = env('STATIC_URL', default='/static/')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'download'),)
 
 MEDIA_URL = env('MEDIA_URL', default='/media/')
-MEDIA_ROOT = env('MEDIA_ROOT', default='/static/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # default permission for all views for auth users only
 # REST_FRAMEWORK = {

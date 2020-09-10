@@ -1,21 +1,16 @@
-from django.shortcuts import render
-from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.reverse import reverse
 
-from rest_framework.generics import get_object_or_404
-from news.models import Article, Journalist, Review, Book
+from books.models import Review, Book
 from .pagination import SmallSetPagination
 from .permissions import IsAdminUserOrReadOnly, IsReviewAuthorOrReadOnly
 from .serializers import (
-    ArticleSerializer,
-    JournalistSerializer,
+    # ArticleSerializer,
+    # JournalistSerializer,
     BookSerializer,
     ReviewSerializer
 )
@@ -66,60 +61,60 @@ from .serializers import (
 #         article.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ArticleListCreateAPIView(APIView):
-    def get(self, request):
-        articles = Article.objects.filter(active=True)
-        serializer = ArticleSerializer(articles, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = ArticleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ArticleDetailAPIView(APIView):
-    # instead of try except in the functional method
-    def get_object(self, pk):
-        article = get_object_or_404(Article, pk=pk)
-        return article
-
-    def get(self, request, pk):
-        article = self.get_object(pk)
-        # call serializer and return its data
-        serializer = ArticleSerializer(article)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        article = self.get_object(pk)
-        serializer = ArticleSerializer(article, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        article = self.get_object(pk)
-        article.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class JournalistCreateAPIView(APIView):
-    def get(self, request):
-        journalists = Journalist.objects.all()
-        serializer = JournalistSerializer(journalists,
-                                          many=True,
-                                          context={'request': request})
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = JournalistSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class ArticleListCreateAPIView(APIView):
+#     def get(self, request):
+#         articles = Article.objects.filter(active=True)
+#         serializer = ArticleSerializer(articles, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = ArticleSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# #
+# #
+# # class ArticleDetailAPIView(APIView):
+# #     # instead of try except in the functional method
+# #     def get_object(self, pk):
+# #         article = get_object_or_404(Article, pk=pk)
+# #         return article
+# #
+# #     def get(self, request, pk):
+# #         article = self.get_object(pk)
+# #         # call serializer and return its data
+# #         serializer = ArticleSerializer(article)
+# #         return Response(serializer.data)
+# #
+# #     def put(self, request, pk):
+# #         article = self.get_object(pk)
+# #         serializer = ArticleSerializer(article, data=request.data)
+# #         if serializer.is_valid():
+# #             serializer.save()
+# #             return Response(serializer.data)
+# #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# #
+# #     def delete(self, request, pk):
+# #         article = self.get_object(pk)
+# #         article.delete()
+# #         return Response(status=status.HTTP_204_NO_CONTENT)
+# #
+#
+# class JournalistCreateAPIView(APIView):
+#     def get(self, request):
+#         journalists = Journalist.objects.all()
+#         serializer = JournalistSerializer(journalists,
+#                                           many=True,
+#                                           context={'request': request})
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = JournalistSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # mixins are used to provide further functionalities
@@ -142,27 +137,29 @@ class JournalistCreateAPIView(APIView):
 # to write and the most magical
 # i.d RetrieveUPdateAPIView extends GenericAPIView
 # and RetrieveModelMixin + UpdateModelMixin
-class BookListCreateAPIView(generics.ListCreateAPIView):
+class BookList(generics.ListCreateAPIView):
     queryset = Book.objects.all().order_by('-id')
     serializer_class = BookSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [IsAdminUserOrReadOnly]
     # setting pagination per view, we must order here
     pagination_class = SmallSetPagination
+    name = 'book-list'
 
 
-class BookDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     # permission_classes = [IsAdminUserOrReadOnly]
+    name = 'book-detail'
 
 
-
-class ReviewListCreateAPIView(generics.CreateAPIView):
+class ReviewList(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    name = 'review-list'
 
     # we need to link to a book because of one-to-many rs
     # here we are linking the passed book with the newely
@@ -176,14 +173,24 @@ class ReviewListCreateAPIView(generics.CreateAPIView):
 
         # check if author already made a review
         review_qs = Review.objects.filter(book=book,
-                                           review_author=review_author)
+                                          review_author=review_author)
         if review_qs.exists():
             raise ValidationError('You have already made a review!')
         serializer.save(book=book, review_author=review_author)
 
 
-class ReviewDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     # allow only review owners to edit this
     permission_classes = [IsReviewAuthorOrReadOnly]
+    name = 'review-detail'
+
+
+class ApiRoot(generics.GenericAPIView):
+    name = 'api-root'
+
+    def get(self, request, *args, **kwargs):
+        return Response({
+            'books': reverse(BookList.name, request=request),
+        })

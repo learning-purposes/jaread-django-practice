@@ -11,8 +11,8 @@ from .models import Profile
 # within the function we're going to creating a profile instance
 # and connect it to the user
 
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    print('created:', created)
-    if created:
-        Profile.objects.create(user=instance)
+# @receiver(post_save, sender=User)
+# def create_profile(sender, instance, created, **kwargs):
+#     print('created:', created)
+#     if created:
+#         Profile.objects.create(user=instance)

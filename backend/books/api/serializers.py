@@ -1,62 +1,62 @@
 from rest_framework import serializers
 from datetime import datetime
 from django.utils.timesince import timesince
-from news.models import Article, Journalist, Book, Review
+from books.models import Book, Review
 
-
-class ArticleSerializer(serializers.ModelSerializer):
-    time_since_publication = serializers.SerializerMethodField()
-
-    # author = serializers.StringRelatedField()
-    """like so we face problem when creating article instance,
-    it needs an author, JournalistSerializer(read_only=true)
-    also doesn't help. we need to make the rs explicit"""
-
-    # author = JournalistSerializer()
-
-    class Meta:
-        model = Article
-        fields = '__all__'
-
-    def get_time_since_publication(self, object):
-        publication_date = object.publication_date
-        now = datetime.now()
-        time_delta = timesince(publication_date, now)
-        return time_delta
-
-    def validate(self, data):
-        """ Validator (object level validation: applies on multiple fields)
-         to check if title and body are different"""
-        if data['title'] == data['description']:
-            raise serializers.ValidationError('Title & description must be different from one another')
-        return data
-
-    def validate_title(self, value):
-        """ Validator (field level validation: applies on a field)
-         60 character long for title"""
-        if len(value) < 60:
-            raise serializers.ValidationError('The title must be at least 60 character long')
-        return value
-
-
-class JournalistSerializer(serializers.ModelSerializer):
-    # we serialize the children telling django here it's a one-to-many rs
-    """ many=True: means no need to pass articles list when
-    creating a journalist instance """
-    # articles = ArticleSerializer(many=True,
-    #                              read_only=True)
-
-    """or like this, if we want to render them as links,
-    ps: add context to the serliazer to pass request"""
-    articles = serializers.HyperlinkedRelatedField(many=True,
-                                                   read_only=True,
-                                                   view_name='article_detail')
-
-    user = serializers.StringRelatedField(read_only=True)
-
-    class Meta:
-        model = Journalist
-        fields = '__all__'
+#
+# class ArticleSerializer(serializers.ModelSerializer):
+#     time_since_publication = serializers.SerializerMethodField()
+#
+#     # author = serializers.StringRelatedField()
+#     """like so we face problem when creating article instance,
+#     it needs an author, JournalistSerializer(read_only=true)
+#     also doesn't help. we need to make the rs explicit"""
+#
+#     # author = JournalistSerializer()
+#
+#     class Meta:
+#         model = Article
+#         fields = '__all__'
+#
+#     def get_time_since_publication(self, object):
+#         publication_date = object.publication_date
+#         now = datetime.now()
+#         time_delta = timesince(publication_date, now)
+#         return time_delta
+#
+#     def validate(self, data):
+#         """ Validator (object level validation: applies on multiple fields)
+#          to check if title and body are different"""
+#         if data['title'] == data['description']:
+#             raise serializers.ValidationError('Title & description must be different from one another')
+#         return data
+#
+#     def validate_title(self, value):
+#         """ Validator (field level validation: applies on a field)
+#          60 character long for title"""
+#         if len(value) < 60:
+#             raise serializers.ValidationError('The title must be at least 60 character long')
+#         return value
+#
+#
+# class JournalistSerializer(serializers.ModelSerializer):
+#     # we serialize the children telling django here it's a one-to-many rs
+#     """ many=True: means no need to pass articles list when
+#     creating a journalist instance """
+#     # articles = ArticleSerializer(many=True,
+#     #                              read_only=True)
+#
+#     """or like this, if we want to render them as links,
+#     ps: add context to the serliazer to pass request"""
+#     articles = serializers.HyperlinkedRelatedField(many=True,
+#                                                    read_only=True,
+#                                                    view_name='article_detail')
+#
+#     user = serializers.StringRelatedField(read_only=True)
+#
+#     class Meta:
+#         model = Journalist
+#         fields = '__all__'
 
 
 class ReviewSerializer(serializers.ModelSerializer):
